@@ -72,12 +72,65 @@ lab1/
 | [ReceiptPrinter.java](src/main/java/md/tmps/shop/ReceiptPrinter.java) | Formats and prints an order receipt. |
 | [ShopTest.java](src/test/java/md/tmps/shop/ShopTest.java) | JUnit tests for business rules and console behavior. |
 
+### UML notation
+
+The following Mermaid UML class diagrams represent selected classes, methods,
+and relationships from the implementation. The visibility markers `+` and `-`
+denote public and private members, respectively. A solid directed association
+(`-->`) represents a stored reference, a dashed dependency (`..>`) represents
+usage, and a realization relationship (`..|>`) represents interface
+implementation. The hollow triangle points to the implemented interface.
+Underlined operations denote static methods.
+
+### Interface definitions
+
+The application defines **three interfaces**: `DiscountPolicy`, `ProductCatalog`,
+and `ProductEditor`. `NoDiscount` and `PercentageDiscount` implement the first;
+`InMemoryProductCatalog` implements both of the others.
+
 ## 4. Single Responsibility Principle (SRP)
 
 **Definition:** A class should have one reason to change. Responsibilities that
 change for different reasons should be separated.
 
-### Where the code implements SRP
+### UML: separate responsibilities
+
+```mermaid
+classDiagram
+    direction TB
+    class ConsoleShop {
+        +run(Scanner input, PrintStream out) void
+    }
+    class Cart {
+        +add(Product product, int quantity) void
+        +remove(String productId) boolean
+        +items() List~CartItem~
+        +clear() void
+    }
+    class CheckoutService {
+        +checkout(Cart cart) Order
+    }
+    class ReceiptPrinter {
+        +print(Order order, PrintStream out) void
+    }
+    class Order {
+        <<record>>
+    }
+    ConsoleShop --> Cart : manages contents through
+    ConsoleShop --> CheckoutService : requests calculation
+    ConsoleShop --> ReceiptPrinter : requests printing
+    CheckoutService ..> Cart : reads items
+    CheckoutService ..> Order : creates
+    ReceiptPrinter ..> Order : reads and formats
+```
+
+The diagram illustrates the separation of interaction coordination, cart
+management, order calculation, and receipt presentation. `ConsoleShop` delegates
+these operations to `Cart`, `CheckoutService`, and `ReceiptPrinter`, respectively.
+Changes to receipt formatting are isolated in `ReceiptPrinter`, while changes to
+quantity merging are isolated in `Cart`.
+
+### Application of SRP
 
 - **`Cart.add`, `remove`, `items`, and `clear`** manage cart contents. `add` merges
   repeated product IDs and checks integer overflow. Cart operations do not read
@@ -111,7 +164,40 @@ belongs in `Cart.add`, independently of receipt presentation.
 An established component should support new behavior through an extension point
 without requiring changes to its existing logic.
 
-### Where the code implements OCP
+### UML: interchangeable discount policies
+
+```mermaid
+classDiagram
+    direction TB
+    class CheckoutService {
+        -DiscountPolicy discountPolicy
+        +CheckoutService(DiscountPolicy discountPolicy)
+        +checkout(Cart cart) Order
+    }
+    class DiscountPolicy {
+        <<interface>>
+        +discountFor(BigDecimal subtotal) BigDecimal
+    }
+    class NoDiscount {
+        +discountFor(BigDecimal subtotal) BigDecimal
+    }
+    class PercentageDiscount {
+        -BigDecimal percentage
+        +PercentageDiscount(BigDecimal percentage)
+        +discountFor(BigDecimal subtotal) BigDecimal
+    }
+    CheckoutService --> DiscountPolicy : calls discountFor
+    NoDiscount ..|> DiscountPolicy
+    PercentageDiscount ..|> DiscountPolicy
+```
+
+`CheckoutService` depends on the `DiscountPolicy` abstraction. `NoDiscount` and
+`PercentageDiscount` provide concrete implementations of the same operation.
+Additional discount policies can implement this contract without modifying the
+checkout algorithm. Policy selection is performed in `Main`, and `discountFor`
+returns the amount deducted from the subtotal.
+
+### Application of OCP
 
 The extension point is `DiscountPolicy.discountFor`:
 
@@ -143,7 +229,7 @@ Two implementations are included:
 private static final BigDecimal DISCOUNT_PERCENTAGE = new BigDecimal("10");
 ```
 
-Change `"10"` to the desired percentage between 0 and 100. `Main.main` uses this
+The configured percentage must be between 0 and 100. `Main.main` uses this
 value for both the policy and the promotional message:
 
 ```java
@@ -165,11 +251,10 @@ A fixed discount of up to 50 MDL can be supplied with the same interface:
 DiscountPolicy discount = subtotal -> subtotal.min(new BigDecimal("50.00"));
 ```
 
-This is an extension example, not the currently configured promotion. To try it,
-replace the policy assignment in `Main.main` and update the promotional message
-there. No change to `CheckoutService`, `Cart`, or `ReceiptPrinter` is needed.
-The startup configuration changes to select the new policy; the existing checkout
-algorithm remains unchanged.
+This alternative policy illustrates an extension to the configured promotion.
+Its adoption requires updating the policy assignment and promotional message in
+`Main.main`. The implementations of `CheckoutService`, `Cart`, and
+`ReceiptPrinter` remain unchanged.
 
 The policy must return a **discount amount**, rather than the final price.
 `CheckoutService.checkout` rejects null, negative discounts, and discounts greater
@@ -181,7 +266,45 @@ demonstrates that a new fixed-discount policy works with the existing service.
 **Definition:** Clients should not be forced to depend on operations they do not
 use. Interfaces should describe the capabilities needed by their consumers.
 
-### Where the code implements ISP
+### UML: separate read and write contracts
+
+```mermaid
+classDiagram
+    direction TB
+    class ConsoleShop {
+        -ProductCatalog catalog
+    }
+    class Main {
+        -seedProducts(ProductEditor editor) void$
+    }
+    class ProductCatalog {
+        <<interface>>
+        +findAll() List~Product~
+        +findById(String id) Optional~Product~
+    }
+    class ProductEditor {
+        <<interface>>
+        +save(Product product) void
+    }
+    class InMemoryProductCatalog {
+        +findAll() List~Product~
+        +findById(String id) Optional~Product~
+        +save(Product product) void
+    }
+    ConsoleShop --> ProductCatalog : reads products
+    Main ..> ProductEditor : seedProducts saves products
+    InMemoryProductCatalog ..|> ProductCatalog
+    InMemoryProductCatalog ..|> ProductEditor
+```
+
+`InMemoryProductCatalog` realizes two distinct interfaces over the same product
+storage. `ConsoleShop` depends on the read operations defined by `ProductCatalog`,
+whereas `Main.seedProducts` depends on the write operation defined by
+`ProductEditor`. Each consumer therefore depends on the capabilities required by
+its responsibility. The diagram presents these consumer contracts; object
+construction and application configuration are performed separately in `Main.main`.
+
+### Application of ISP
 
 Product access is split into two interfaces:
 
