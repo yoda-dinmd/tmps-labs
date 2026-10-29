@@ -10,13 +10,6 @@
     </parent>
     <artifactId>lab1</artifactId>
     <name>Lab 1 — SOLID ecommerce</name>
-    <dependencies>
-        <dependency>
-            <groupId>org.junit.jupiter</groupId>
-            <artifactId>junit-jupiter</artifactId>
-            <scope>test</scope>
-        </dependency>
-    </dependencies>
     <build>
         <plugins>
             <plugin>
@@ -25,7 +18,7 @@
                 <configuration>
                     <archive>
                         <manifest>
-                            <mainClass>md.tmps.shop.Main</mainClass>
+                            <mainClass>md.tmps.md.tmps.shop.Main</mainClass>
                         </manifest>
                     </archive>
                 </configuration>
