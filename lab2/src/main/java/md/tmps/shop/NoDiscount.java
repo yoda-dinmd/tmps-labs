@@ -1,6 +1,5 @@
 package md.tmps.shop;
 
-import md.tmps.shop.DiscountPolicy;
 
 import java.math.BigDecimal;
 

@@ -1,10 +1,5 @@
 package md.tmps.shop;
 
-import md.tmps.shop.Cart;
-import md.tmps.shop.CartItem;
-import md.tmps.shop.DiscountPolicy;
-import md.tmps.shop.Order;
-
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.util.List;
