@@ -50,7 +50,7 @@ tmps-labs/
 
 Open the root `pom.xml` as a Maven project, or use **Add as Maven Project** on it
 in the already-open folder. Set the project SDK to JDK 17 or newer and select the
-Maven Wrapper in Maven settings. Reload Maven, then run `md.tmps.shop.Main` from
+Maven Wrapper in Maven settings. Reload Maven, then run `md.tmps.md.tmps.shop.Main` from
 `lab1`. IntelliJ metadata stays local through `.gitignore`.
 
 ## Adding the next laboratory
