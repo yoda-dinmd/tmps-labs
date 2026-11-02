@@ -12,9 +12,15 @@ public final class Main {
     public static void main(String[] args) {
         InMemoryProductCatalog catalog = InMemoryProductCatalog.getInstance();
         seedProducts(catalog);
-        DiscountPolicy discount = new PercentageDiscount(DISCOUNT_PERCENTAGE);
-        System.out.printf("Today's promotion: %s%% off every order.%n", DISCOUNT_PERCENTAGE);
-        ConsoleShop shop = new ConsoleShop(catalog, new CheckoutService(discount), new ReceiptPrinter());
+        CheckoutService checkout;
+        if (args.length > 0 && args[0].equals("--regular")) {
+            checkout = new RegularCheckoutService();
+            System.out.println("Regular checkout: no discount.");
+        } else {
+            checkout = new PromotionalCheckoutService(DISCOUNT_PERCENTAGE);
+            System.out.printf("Today's promotion: %s%% off every order.%n", DISCOUNT_PERCENTAGE);
+        }
+        ConsoleShop shop = new ConsoleShop(catalog, checkout, new ReceiptPrinter());
         shop.run(new Scanner(System.in), System.out);
     }
 

@@ -8,9 +8,10 @@ import java.util.Optional;
 public final class InMemoryProductCatalog implements ProductCatalog, ProductEditor {
 
     private static InMemoryProductCatalog instance;
-    private InMemoryProductCatalog(){}
+    private InMemoryProductCatalog() { }
 
-    public static InMemoryProductCatalog getInstance(){
+    // Singleton: product setup and the shopping console share this catalog.
+    public static InMemoryProductCatalog getInstance() {
         if (instance == null) {
             instance = new InMemoryProductCatalog();
         }

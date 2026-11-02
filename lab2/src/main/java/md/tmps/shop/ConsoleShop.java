@@ -45,7 +45,11 @@ public final class ConsoleShop {
                     case "4" -> {
                         out.print("Product ID to remove: ");
                         if (!input.hasNextLine()) return;
-                        out.println(cart.remove(input.nextLine().trim()) ? "Item removed." : "Item not in cart.");
+                        String productId = input.nextLine().trim();
+                        out.print("Quantity: ");
+                        if (!input.hasNextLine()) return;
+                        int quantity = Integer.parseInt(input.nextLine().trim());
+                        out.println(cart.remove(productId, quantity) ? "Item removed." : "Item not in cart.");
                     }
                     case "5" -> {
                         Order order = checkout.checkout(cart);

@@ -21,6 +21,22 @@ public final class Cart {
         return items.remove(productId) != null;
     }
 
+    public boolean remove(String productId, int quantity) {
+        if (quantity <= 0) {
+            throw new IllegalArgumentException("Quantity must be positive.");
+        }
+        CartItem existing = items.get(productId);
+        if (existing == null) {
+            return false;
+        }
+        if (quantity >= existing.quantity()) {
+            items.remove(productId);
+        } else {
+            items.put(productId, new CartItem(existing.product(), existing.quantity() - quantity));
+        }
+        return true;
+    }
+
     public List<CartItem> items() {
         return List.copyOf(items.values());
     }
