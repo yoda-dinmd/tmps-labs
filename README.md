@@ -17,15 +17,16 @@ From the repository root on Linux/macOS:
 ./mvnw clean verify
 java -jar lab1/target/lab1-1.0-SNAPSHOT.jar
 java -jar lab2/target/lab2-1.0-SNAPSHOT.jar
+java -jar lab3/target/lab3-1.0-SNAPSHOT.jar
 ```
 
 On Windows, use `mvnw.cmd clean verify`, followed by the same `java -jar` command.
 If Maven is already installed, `mvn` can replace `./mvnw`.
 
-Build only a specific lab (e.g., `lab1` or `lab2`):
+Build only a specific lab:
 
 ```sh
-./mvnw -pl lab2 -am package
+./mvnw -pl lab3 -am package
 ```
 
 ## Modules
@@ -34,6 +35,7 @@ Build only a specific lab (e.g., `lab1` or `lab2`):
 | --- | --- | --- |
 | [lab1](lab1/README.md) | SRP, OCP, ISP | Product catalog, cart, discounts, checkout, receipts |
 | [lab2](lab2/README.md) | Singleton, Factory Method, Builder | Shared catalog, regular/promotional checkout creators, order builder |
+| [lab3](lab3/README.md) (Moodle Lab 2) | Facade, Decorator, Proxy | Shop operations, stackable receipts, lazy catalog |
 
 ```text
 tmps-labs/
@@ -44,8 +46,13 @@ tmps-labs/
 │   ├── README.md
 │   ├── pom.xml              # Runnable JAR configuration
 │   └── src/main/java/md/tmps/shop/
-└── lab2/
+├── lab2/
+│   ├── README.md
+│   ├── pom.xml              # Runnable JAR configuration
+│   └── src/main/java/md/tmps/shop/
+└── lab3/
     ├── README.md
+    ├── report.md
     ├── pom.xml              # Runnable JAR configuration
-    └── src/main/java/md/tmps/shop/
+    └── src/
 ```
