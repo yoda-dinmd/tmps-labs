@@ -18,6 +18,7 @@ From the repository root on Linux/macOS:
 java -jar lab1/target/lab1-1.0-SNAPSHOT.jar
 java -jar lab2/target/lab2-1.0-SNAPSHOT.jar
 java -jar lab3/target/lab3-1.0-SNAPSHOT.jar
+java -jar lab4/target/lab4-1.0-SNAPSHOT.jar
 ```
 
 On Windows, use `mvnw.cmd clean verify`, followed by the same `java -jar` command.
@@ -26,7 +27,7 @@ If Maven is already installed, `mvn` can replace `./mvnw`.
 Build only a specific lab:
 
 ```sh
-./mvnw -pl lab3 -am package
+./mvnw -pl lab4 -am package
 ```
 
 ## Modules
@@ -36,6 +37,7 @@ Build only a specific lab:
 | [lab1](lab1/README.md) | SRP, OCP, ISP | Product catalog, cart, discounts, checkout, receipts |
 | [lab2](lab2/README.md) | Singleton, Factory Method, Builder | Shared catalog, regular/promotional checkout creators, order builder |
 | [lab3](lab3/README.md) (Moodle Lab 2) | Facade, Decorator, Proxy | Shop operations, stackable receipts, lazy catalog |
+| [lab4](lab4/README.md) (Moodle Lab 3) | Strategy, Command, Observer | Runtime discount strategies, undoable commands, order observers |
 
 ```text
 tmps-labs/
@@ -50,9 +52,14 @@ tmps-labs/
 │   ├── README.md
 │   ├── pom.xml              # Runnable JAR configuration
 │   └── src/main/java/md/tmps/shop/
-└── lab3/
+├── lab3/
+│   ├── README.md
+│   ├── report.md
+│   ├── pom.xml              # Runnable JAR configuration
+│   └── src/
+└── lab4/
     ├── README.md
-    ├── report.md
+    ├── REPORT.md
     ├── pom.xml              # Runnable JAR configuration
     └── src/
 ```
